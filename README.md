@@ -16,6 +16,8 @@ A small orders API for an electronics kit store. Express + MySQL.
 - `GET /health`
 - `GET /customers`
 - `GET /customers/:id`
+- `GET /customers/:id/orders` returns an array of a customer's order summaries (same shape as `GET /orders` items), newest first. Query params: `page` (default 1), `limit` (default 20, max 100).
+- `GET /orders` returns a paginated list of order summaries, newest first. Query params: `page` (default 1), `limit` (default 20, max 100), `status` (optional: `pending`, `paid`, `shipped`, `cancelled`). Response: `{ data, page, limit, total }`, where each summary has `id`, `status`, `created_at`, `customer` (`id`, `name`, `city`), `item_count` (line items) and `total_paise`.
 - `GET /orders/:id` returns an order with its customer, items and total.
 
 Money is stored as integer paise.
