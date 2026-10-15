@@ -29,3 +29,29 @@ test('GET /customers/:id returns 404 for unknown id', async () => {
   const res = await request(app).get('/customers/999');
   assert.strictEqual(res.status, 404);
 });
+
+test('GET /customers/:id/orders returns that customer\'s order summaries', async () => {
+  const res = await request(app).get('/customers/1/orders');
+  assert.strictEqual(res.status, 200);
+  assert.deepStrictEqual(res.body.map((o) => o.id), [2, 1]);
+  assert.deepStrictEqual(res.body[0], {
+    id: 2,
+    status: 'pending',
+    created_at: res.body[0].created_at,
+    customer: { id: 1, name: 'Aarav Sharma', city: 'Kanpur' },
+    item_count: 1,
+    total_paise: 4 * 9900,
+  });
+});
+
+test('GET /customers/:id/orders returns null city when unset', async () => {
+  const res = await request(app).get('/customers/3/orders');
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(res.body.length, 1);
+  assert.strictEqual(res.body[0].customer.city, null);
+});
+
+test('GET /customers/:id/orders returns 404 for unknown customer', async () => {
+  const res = await request(app).get('/customers/999/orders');
+  assert.strictEqual(res.status, 404);
+});
