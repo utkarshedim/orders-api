@@ -64,13 +64,14 @@ async function listOrders({ limit, offset, status }) {
   return { orders: rows.map(toOrderSummary), total };
 }
 
-async function listOrdersByCustomerId(customerId) {
+async function listOrdersByCustomerId(customerId, { limit, offset }) {
   const [rows] = await db.query(
     `${ORDER_SUMMARY_SELECT}
       WHERE o.customer_id = ?
       GROUP BY o.id, c.id
-      ORDER BY o.created_at DESC, o.id DESC`,
-    [customerId]
+      ORDER BY o.created_at DESC, o.id DESC
+      LIMIT ? OFFSET ?`,
+    [customerId, limit, offset]
   );
   return rows.map(toOrderSummary);
 }

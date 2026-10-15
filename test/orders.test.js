@@ -58,7 +58,10 @@ test('GET /orders filters by status', async () => {
 });
 
 test('GET /orders rejects invalid query params', async () => {
-  for (const qs of ['page=0', 'page=abc', 'limit=0', 'limit=101', 'status=lost']) {
+  for (const qs of [
+    'page=0', 'page=abc', 'page[]=2', 'page=99999999999999999999', 'page=900719925474099',
+    'limit=0', 'limit=101', 'limit[]=5', 'status=lost',
+  ]) {
     const res = await request(app).get(`/orders?${qs}`);
     assert.strictEqual(res.status, 400, qs);
   }
